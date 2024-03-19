@@ -8,33 +8,38 @@
 
 
 class IntegerMatrix {
+    public:
+    
     typedef unsigned int size_type; 
+    typedef boost::multiprecision::checked_int256_t integer;
 
     private:
 
     size_type numberOfColumns_;
     size_type numberOfRows_;
-    boost::multiprecision::checked_int256_t **Matrix_;
+    integer **Matrix_;
 
     public:
 
-    const unsigned int MAXIMUM_LINEAR_SIZE = std::numeric_limits<size_type>::max();
-    const boost::multiprecision::checked_int256_t MAXIM_ENTRY = std::numeric_limits<
-                                          boost::multiprecision::checked_int256_t>::max();
-    const boost::multiprecision::checked_int256_t MINIMUM_ENTRY = std::numeric_limits<
-                                          boost::multiprecision::checked_int256_t>::min();
-
-    explicit IntegerMatrix(size_type row, size_type col);
-    IntegerMatrix(std::vector<std::vector<boost::multiprecision::checked_int256_t>>& M);
+    explicit IntegerMatrix(size_type row = 1, size_type col = 1);
+    IntegerMatrix(std::vector<std::vector<integer>>& M);
     ~IntegerMatrix();
     IntegerMatrix(const IntegerMatrix& M);
 
     inline size_type numberOfRows() {return numberOfRows_;}
     inline size_type numberOfColumns() {return numberOfColumns_;}
+    inline unsigned int getMaxSize() {
+        return std::numeric_limits<size_type>::max();
+    }
+    inline integer getMaxEntry(){return std::numeric_limits<integer>::max();}
+    inline integer getMinEntry(){return std::numeric_limits<integer>::min();}
 
+
+    //Output
     friend std::ostream& operator<<(std::ostream& os, const IntegerMatrix& M);
+    //number of digits in the 10-base system
+    static unsigned int number_length10(integer a);
 };
-
 
 
 
