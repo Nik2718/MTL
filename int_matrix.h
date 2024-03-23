@@ -4,12 +4,12 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <initializer_list>
 #include <boost/multiprecision/cpp_int.hpp>
-
 
 class IntegerMatrix {
     public:
-    
+
     typedef unsigned int size_type; 
     typedef boost::multiprecision::checked_int256_t integer;
 
@@ -21,19 +21,31 @@ class IntegerMatrix {
 
     public:
 
-    explicit IntegerMatrix(size_type row = 1, size_type col = 1);
-    IntegerMatrix(std::vector<std::vector<integer>>& M);
+    //Constructors and destructor
+    IntegerMatrix(size_type row = 1, size_type col = 1);
+    IntegerMatrix(const std::vector<std::vector<integer>>& M);
+    IntegerMatrix(const std::initializer_list<
+                        std::initializer_list<integer>>& M);
     ~IntegerMatrix();
-    IntegerMatrix(const IntegerMatrix& M);
 
-    inline size_type numberOfRows() {return numberOfRows_;}
-    inline size_type numberOfColumns() {return numberOfColumns_;}
+    //Copying
+    IntegerMatrix(const IntegerMatrix& M);
+    IntegerMatrix& operator=(const IntegerMatrix& M);
+
+    //Access
+    inline size_type getNumberOfRows() {return numberOfRows_;}
+    inline size_type getNumberOfColumns() {return numberOfColumns_;}
+    integer& operator()(size_type i, size_type j){return Matrix_[i][j];}
+
+    //Limits
     inline unsigned int getMaxSize() {
         return std::numeric_limits<size_type>::max();
     }
-    inline integer getMaxEntry(){return std::numeric_limits<integer>::max();}
+    inline integer getMaxEntry(){return std::numeric_limits<integer>::max();}  
     inline integer getMinEntry(){return std::numeric_limits<integer>::min();}
 
+    //Comparison
+    bool operator==(const IntegerMatrix& A) const;
 
     //Output
     friend std::ostream& operator<<(std::ostream& os, const IntegerMatrix& M);

@@ -32,7 +32,7 @@ IntegerMatrix::IntegerMatrix(size_type row, size_type col) {
     }
 }
 
-IntegerMatrix::IntegerMatrix(std::vector<std::vector<integer>>& M) {
+IntegerMatrix::IntegerMatrix(const std::vector<std::vector<integer>>& M) {
 
     if(M.size() == 0 || M[0].size() == 0) {
         throw IntegerMatrix_Exception("Zero size parameter of a matrix");
@@ -69,7 +69,96 @@ IntegerMatrix::IntegerMatrix(std::vector<std::vector<integer>>& M) {
         }
     }
 }
-                                                                                
+
+IntegerMatrix& IntegerMatrix::operator=(const IntegerMatrix& M) {
+    integer** M2 = new integer*[M.numberOfRows_];
+    if(!M2){
+        std::cerr << "Memory error when creating a matrix" << std::endl;
+        exit(-1);
+    }
+
+    for(size_type i = 0; i < M.numberOfRows_; ++i){
+        M2[i] = new integer[M.numberOfColumns_];
+        if(!M2[i]){
+            std::cerr << "Memory error when creating a matrix" << std::endl;
+            exit(-1);           
+        }
+    }
+
+    for(size_type i = 0; i < M.numberOfRows_; ++i){
+        for(size_type j = 0; j < M.numberOfColumns_; ++j){
+            M2[i][j] = M.Matrix_[i][j];
+        }
+    }
+
+    for(size_type i = 0; i < this->numberOfRows_; ++i){
+        delete [] this->Matrix_[i];
+    }
+    delete [] this->Matrix_;
+
+    this->Matrix_ = M2;
+    this->numberOfRows_ = M.numberOfRows_;
+    this->numberOfColumns_ = M.numberOfColumns_;
+
+    return *this;
+}
+       
+
+bool IntegerMatrix::operator==(const IntegerMatrix& A) const {
+    if(this->numberOfRows_ != A.numberOfRows_) return false;
+    if(this->numberOfColumns_ != A.numberOfColumns_) return false;
+
+    for(size_type i = 0; i < this->numberOfRows_; ++i){
+        for(size_type j = 0; j < this->numberOfColumns_; ++j){
+            if(this->Matrix_[i][j] != A.Matrix_[i][j]) return false;
+        }
+    }
+    return true;
+}
+
+
+IntegerMatrix::IntegerMatrix(const std::initializer_list<
+                                   std::initializer_list<integer>>& M){
+
+    if(M.size() == 0 || M.begin()->size() == 0) {
+        throw IntegerMatrix_Exception("Zero size parameter of a matrix");
+        numberOfColumns_ = numberOfRows_ = 1;
+    }
+    else if(M.size() > getMaxSize() || M.begin()->size() > getMaxSize()){
+        throw IntegerMatrix_Exception("Matrix size is too large");
+        numberOfColumns_ = numberOfRows_ = 1;
+    }
+    else{
+        numberOfRows_ = M.size();
+        numberOfColumns_ = M.begin()->size();
+    }
+
+    Matrix_ = new integer*[numberOfRows_];
+
+    if(!Matrix_) {
+        std::cerr << "Memory error when creating a matrix" << std::endl;
+        exit(-1);
+    }
+
+    for(size_type i = 0; i < numberOfRows_; ++i) {
+        Matrix_[i] = new integer[numberOfColumns_];
+
+        if(! Matrix_[i]) {
+            std::cerr << "Memory error when creating a matrix" << std::endl;
+            exit(-1);            
+        }
+    }
+    int i = 0, j = 0;
+    for(const std::initializer_list<integer>& row : M){
+        j = 0;
+        for(const integer& el: row){
+            Matrix_[i][j] = el;
+            ++j;
+        }
+        ++i;
+    }
+}
+
 IntegerMatrix::~IntegerMatrix() {
     for(size_type i = 0; i < numberOfRows_; ++i){
         delete [] Matrix_[i];
