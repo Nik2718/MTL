@@ -31,6 +31,7 @@ class IntegerMatrix {
     //Copying
     IntegerMatrix(const IntegerMatrix& M);
     IntegerMatrix& operator=(const IntegerMatrix& M);
+    IntegerMatrix::IntegerMatrix(IntegerMatrix&& M);
 
     //Access
     inline size_type getNumberOfRows() {return numberOfRows_;}
@@ -38,21 +39,29 @@ class IntegerMatrix {
     integer& operator()(size_type i, size_type j){return Matrix_[i][j];}
 
     //Limits
-    inline unsigned int getMaxSize() {
+    inline static unsigned int getMaxSize() {
         return std::numeric_limits<size_type>::max();
     }
-    inline integer getMaxEntry(){return std::numeric_limits<integer>::max();}  
-    inline integer getMinEntry(){return std::numeric_limits<integer>::min();}
+    inline static integer getMaxEntry(){
+                          return std::numeric_limits<integer>::max();
+    }  
+    inline static integer getMinEntry(){
+                          return std::numeric_limits<integer>::min();
+    }
 
     //Comparison
     bool operator==(const IntegerMatrix& A) const;
 
+    //Arithmetic
+
+
+    int reduceToSmithForm();
+
     //Output
     friend std::ostream& operator<<(std::ostream& os, const IntegerMatrix& M);
-    //number of digits in the 10-base system
+    //number of digits in the 10-base system (sign will be took into account)
     static unsigned int number_length10(integer a);
 };
-
 
 
 class IntegerMatrix_Exception: public std::exception {
@@ -69,5 +78,7 @@ class IntegerMatrix_Exception: public std::exception {
 
     std::string message_;
 };
+
+std::vector<IntegerMatrix::integer> findSmithNormalForm(const IntegerMatrix& A);
 
 #endif

@@ -159,6 +159,49 @@ IntegerMatrix::IntegerMatrix(const std::initializer_list<
     }
 }
 
+IntegerMatrix::IntegerMatrix(const IntegerMatrix& M){
+    numberOfColumns_ = M.numberOfColumns_;
+    numberOfRows_ = M.numberOfRows_;
+
+    Matrix_ = new integer*[numberOfRows_];
+
+    if(!Matrix_) {
+        std::cerr << "Memory error when creating a matrix" << std::endl;
+        exit(-1);
+    }
+
+    for(size_type i = 0; i < numberOfRows_; ++i) {
+        Matrix_[i] = new integer[numberOfColumns_];
+
+        if(! Matrix_[i]) {
+            std::cerr << "Memory error when creating a matrix" << std::endl;
+            exit(-1);            
+        }
+    }
+ 
+    for(size_type i = 0; i < numberOfRows_; ++i) {
+        for(size_type j = 0; j < numberOfColumns_; ++j) {
+            Matrix_[i][j] = 0;
+        }
+    }
+
+    for(size_type i = 0; i < numberOfRows_; ++i){
+        for(size_type j = 0; j < numberOfColumns_; ++j){
+            Matrix_[i][j] = M.Matrix_[i][j];
+        }
+    }
+}
+
+IntegerMatrix::IntegerMatrix(IntegerMatrix&& M){
+    Matrix_ = M.Matrix_;
+    numberOfRows_ = M.numberOfRows_;
+    numberOfColumns_ = M.numberOfColumns_;
+
+    M.Matrix_ = nullptr;
+    M.numberOfRows_ = 0;
+    M.numberOfColumns_ = 0;
+}
+
 IntegerMatrix::~IntegerMatrix() {
     for(size_type i = 0; i < numberOfRows_; ++i){
         delete [] Matrix_[i];
