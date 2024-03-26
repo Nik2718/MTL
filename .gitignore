@@ -1,4 +1,7 @@
 test
+
+*.DS_Store
+
 *.json
 # Prerequisites
 *.d
@@ -32,4 +35,4 @@ test
 *.exe
 *.out
 *.app
-test
+
