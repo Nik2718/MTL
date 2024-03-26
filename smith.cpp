@@ -25,6 +25,7 @@ struct Data{
             for(size_type i = 0; i < A.getNumberOfRows(); ++i) row[i] = i;
             for(size_type j = 0; j < A.getNumberOfColumns(); ++j) col[j] = j;
         }
+
 };
 
 

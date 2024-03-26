@@ -109,6 +109,7 @@ class IntegerMatrix_Exception: public std::exception {
     private:
 
     std::string message_;
+
 };
 
 #endif

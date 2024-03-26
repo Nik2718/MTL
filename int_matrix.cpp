@@ -33,6 +33,7 @@ IntegerMatrix::IntegerMatrix(size_type row, size_type col, integer entry) {
             Matrix_[i][j] = entry;
         }
     }
+
 }
 
 IntegerMatrix::IntegerMatrix(const std::vector<std::vector<integer>>& M) {

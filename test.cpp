@@ -12,6 +12,7 @@ BOOST_AUTO_TEST_CASE( test_1 ){
         return;
     }
     BOOST_ERROR("Zero number of rows was not found\n");
+
 }
 
 BOOST_AUTO_TEST_CASE( test_2 ){
