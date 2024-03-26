@@ -1,6 +1,7 @@
 test
 
 *.DS_Store
+*.dSYM
 
 *.json
 # Prerequisites
