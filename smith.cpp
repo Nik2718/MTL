@@ -1,113 +1,66 @@
 #include "int_matrix.h"
 
-int algorithm_step(IntegerMatrix& M, 
-                   std::vector<IntegerMatrix::size_type>& row, 
-                   std::vector<IntegerMatrix::size_type>& col, 
-                   IntegerMatrix::size_type step);
+using size_type = IntegerMatrix::size_type;
+using integer = IntegerMatrix::integer;
 
-bool isAnyDivisibleByCorner(IntegerMatrix& M, 
-                            std::vector<IntegerMatrix::size_type>& row, 
-                            std::vector<IntegerMatrix::size_type>& col, 
-                            IntegerMatrix::size_type step,
-                            IntegerMatrix::size_type& ii,
-                            IntegerMatrix::size_type& jj);
+struct Data{
+    IntegerMatrix M;
+    std::vector<size_type> row;
+    std::vector<size_type> col;
+    //The i,j-entry of the matrix M is M(row[i], col[j])
+    //This construction is necessary for faster swap 
+    //of two rows (or two columns) 
 
-void addRowToRow(IntegerMatrix& M, 
-                const std::vector<IntegerMatrix::size_type>& row, 
-                const std::vector<IntegerMatrix::size_type>& col, 
-                IntegerMatrix::size_type step,
-                IntegerMatrix::size_type i1,
-                IntegerMatrix::size_type i2,
-                IntegerMatrix::integer c);
+    size_type minSize; //Minimum of numbers of rows and columns
+    size_type step; //The number of a step of the algorithm
+    size_type ii; //The row number under consideration
+    size_type jj; //The column number under consideration
 
-void addColToCol(IntegerMatrix& M, 
-                const std::vector<IntegerMatrix::size_type>& row, 
-                const std::vector<IntegerMatrix::size_type>& col, 
-                IntegerMatrix::size_type step,
-                IntegerMatrix::size_type j1,
-                IntegerMatrix::size_type j2,
-                IntegerMatrix::integer c);
-
-
-int IntegerMatrix::reduceToSmithForm(){
-
-    std::vector<size_type> row(getNumberOfRows());
-    for(size_type i = 0; i < getNumberOfRows(); ++i) row[i] = i;
-
-    std::vector<size_type> col(getNumberOfColumns());
-    for(size_type i = 0; i < getNumberOfColumns(); ++i) col[i] = i;
-
-    size_type min_size = std::min(getNumberOfRows(), getNumberOfColumns());    
-
-    int flag;
-    for(size_type i = 0; i < min_size; ++i){
-        flag == algorithm_step(*this, row, col, min_size, i);
-        if(flag < 0){
-            throw IntegerMatrix_Exception(
-                  "The algorithm of reduction to Smith form failed");
-            return flag;
+    Data(IntegerMatrix&& A): 
+        M{A}, //the matrix is moved in the struct
+        row{std::vector<size_type>(A.getNumberOfRows(), 0)},
+        col{std::vector<size_type>(A.getNumberOfColumns(), 0)},
+        minSize{std::min(A.getNumberOfRows(), A.getNumberOfColumns())},
+        step{0}, ii{0}, jj{0} {
+            for(size_type i = 0; i < A.getNumberOfRows(); ++i) row[i] = i;
+            for(size_type j = 0; j < A.getNumberOfColumns(); ++j) col[j] = j;
         }
-    }
-}
+};
 
-bool isAnyDivisibleByCorner(IntegerMatrix& M, 
-                            std::vector<IntegerMatrix::size_type>& row, 
-                            std::vector<IntegerMatrix::size_type>& col, 
-                            IntegerMatrix::size_type step,
-                            IntegerMatrix::size_type& ii,
-                            IntegerMatrix::size_type& jj){
-    
-    for(IntegerMatrix::size_type i = step; i < M.getNumberOfRows(); ++i)
-    {
-        for(IntegerMatrix::size_type j = step; j < M.getNumberOfColumns(); ++i){
-            if(M(row[i],col[j]) % M(row[step], row[step]) != 0){
-                ii = i;
-                jj = j;
-                return false;
+
+void algorithmStep(Data& D, SmithForm& SF);
+
+bool isNextSquareDivisibleByCorner(Data& D);
+bool isCurrentRowDivisibleByCorner(Data& D);
+bool isCurrentColumnDivisibleByCorner(Data& D);
+
+void addRowToRow      (Data& D, SmithForm& SF, 
+                       size_type i1, size_type i2, integer c);
+void addColumnToColumn(Data& D, SmithForm& SF, 
+                       size_type j1, size_type j2, integer c);
+
+void swapRows   (Data& D, SmithForm& SF, size_type i1, size_type i2);
+void swapColumns(Data& D, SmithForm& SF, size_type j1, size_type j2);
+
+
+SmithForm findSmithForm(IntegerMatrix A){
+
+    SmithForm SF(A.getNumberOfRows(), A.getNumberOfColumns());
+    Data D(std::move(A));
+
+    try{
+        for(D.step = 0; D.step < D.minSize; ++D.step){
+                algorithmStep(D, SF);
             }
-        }
     }
-    return true;
-}
-
-// Add the i1-th row  to the i2-th row 
-//with the coefficient c
-void addRowToRow(IntegerMatrix& M, 
-                std::vector<IntegerMatrix::size_type>& row, 
-                std::vector<IntegerMatrix::size_type>& col, 
-                IntegerMatrix::size_type step,
-                IntegerMatrix::size_type& i1,
-                IntegerMatrix::size_type& i2,
-                IntegerMatrix::integer c){
-    for(int j = step; j < M.getNumberOfColumns(); ++j){
-        M(row[i2], col[j]) += c * M(row[i1], col[j]);
+    catch(std::overflow_error& E){
+        SF.isCorrect = false;
+        std::cerr << E.what() << std::endl;
+        return SF;
     }
-}
-
-// Add the j1-th column to the j2-th column 
-//with the coefficient c
-void addColToCol(IntegerMatrix& M, 
-                const std::vector<IntegerMatrix::size_type>& row, 
-                const std::vector<IntegerMatrix::size_type>& col, 
-                IntegerMatrix::size_type step,
-                IntegerMatrix::size_type j1,
-                IntegerMatrix::size_type j2,
-                IntegerMatrix::integer c){
-    for(int i = 0; i < M.getNumberOfRows(); ++i){
-        M(row[i], col[j2]) += c * M(row[i], row[j1]);
+    for(size_type i = 0; i < D.minSize; ++i){
+        SF.InvariantFactors[i] = A(i,i);
     }
-}
-
-
-int algorithm_step(IntegerMatrix& M, 
-                   std::vector<IntegerMatrix::size_type>& row, 
-                   std::vector<IntegerMatrix::size_type>& col, 
-                   IntegerMatrix::size_type step){
-    IntegerMatrix::size_type ii = step, jj = step;
-    while (isAnyDivisibleByCorner(M, row, col, step, ii, jj) == false){
-        
-        
-    }
-
-    return 0;
+    SF.isCorrect = true;
+    return SF;
 }

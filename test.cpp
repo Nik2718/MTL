@@ -74,7 +74,6 @@ BOOST_AUTO_TEST_CASE( test_6 ){
                         std::string{IntegerMatrix::getMinEntry().str()}.size());
 }
 
-
 BOOST_AUTO_TEST_CASE( test_7 ) {
     IntegerMatrix A{{1, 2, -4, 222, 1, 444, 1},
                     {2, 3, -25, 333, 19, 2, 4}};
