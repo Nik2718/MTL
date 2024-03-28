@@ -7,7 +7,12 @@
 #include <initializer_list>
 #include <boost/multiprecision/cpp_int.hpp>
 
+class IntegerMatrix;
+class IntegerMatrix_Exception;
+class SmithForm;
+
 class IntegerMatrix {
+
     public:
 
     typedef unsigned int size_type; 
@@ -17,6 +22,9 @@ class IntegerMatrix {
 
     size_type numberOfColumns_;
     size_type numberOfRows_;
+
+    protected:
+
     integer **Matrix_;
 
     public:
@@ -35,11 +43,13 @@ class IntegerMatrix {
     IntegerMatrix& operator=(IntegerMatrix&& M) noexcept;
 
     //Access
-    inline size_type getNumberOfRows() const noexcept {return numberOfRows_;}
+    inline size_type getNumberOfRows()    const noexcept {
+        return numberOfRows_;
+    }
     inline size_type getNumberOfColumns() const noexcept{
         return numberOfColumns_;
     }
-    integer& operator()(size_type i, size_type j){return Matrix_[i][j];}
+    inline integer& operator()(size_type i, size_type j){return Matrix_[i][j];}
 
     //Limits
     inline static unsigned int getMaxSize(){
@@ -69,32 +79,6 @@ class IntegerMatrix {
     //number of digits in the 10-base system (sign will be took into account)
 };
 
-struct SmithForm{
-    bool isCorrect;//whether data are correct
-    std::vector<IntegerMatrix::integer> InvariantFactors;
-    IntegerMatrix Left; //matrix of left transformaion
-    IntegerMatrix Right; //matrix of right transformaion
-
-    SmithForm(IntegerMatrix::size_type numberOfRows = 1,
-              IntegerMatrix::size_type numberOfColumns = 1):
-        isCorrect{false}, 
-        InvariantFactors{std::vector<IntegerMatrix::integer>(
-                         std::min(numberOfRows, numberOfColumns), 0)},
-        Left{IntegerMatrix(numberOfRows, numberOfRows, 0)},
-        Right{IntegerMatrix(numberOfColumns, numberOfColumns, 0)} {
-            for(IntegerMatrix::size_type i = 0; i < numberOfRows; ++i){
-                Left(i,i) = 1;
-            }
-            for(IntegerMatrix::size_type j = 0; j < numberOfColumns; ++j){
-                Right(j,j) = 1;
-            }
-            //Left and Right are initialized as the identity matrices
-        }
-};
-
-//Reduction to Smith normal form
-// Left * Diagonal Matrix of Invariant Factors * Right == A
-SmithForm findSmithForm(IntegerMatrix A);
 
 class IntegerMatrix_Exception: public std::exception {
     public:
@@ -111,5 +95,39 @@ class IntegerMatrix_Exception: public std::exception {
     std::string message_;
 
 };
+
+
+class SmithForm{
+
+    private:
+
+    bool isCorrect_;//whether data are correct
+    IntegerMatrix::size_type minSize_; 
+    //Minimum of sizes of square matrices Left_ and Right_
+    std::vector<IntegerMatrix::integer> InvariantFactors_;
+    IntegerMatrix Left_; //matrix of left transformaion
+    IntegerMatrix Right_; //matrix of right transformaion
+
+    public:
+
+    SmithForm(IntegerMatrix A);
+    // Left * Diagonal Matrix of Invariant Factors * Right == A
+
+    inline bool isCorrect() const noexcept {return isCorrect_;}
+    inline IntegerMatrix::size_type getMinSize() const noexcept{
+        return minSize_;
+    }
+    inline const IntegerMatrix& getLeftMatrix() const noexcept{
+        return Left_;
+    }
+    inline const IntegerMatrix& getRightMatrix() const noexcept{
+        return Right_;
+    }
+    inline const std::vector<
+    IntegerMatrix::integer>& getInvariantFactors() const noexcept{
+        return InvariantFactors_;
+    }
+};
+
 
 #endif
