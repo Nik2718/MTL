@@ -4,12 +4,15 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <stack>
 #include <initializer_list>
+#include <stdexcept>
 #include <boost/multiprecision/cpp_int.hpp>
 
 class IntegerMatrix;
 class IntegerMatrix_Exception;
 class SmithForm;
+class Xgcd;
 
 class IntegerMatrix {
 
@@ -22,9 +25,6 @@ class IntegerMatrix {
 
     size_type numberOfColumns_;
     size_type numberOfRows_;
-
-    protected:
-
     integer **Matrix_;
 
     public:
@@ -71,6 +71,38 @@ class IntegerMatrix {
     IntegerMatrix& operator*=(const IntegerMatrix & A);
     friend IntegerMatrix operator*(IntegerMatrix A, const IntegerMatrix& B);
 
+    //Manipulation of rows and columns
+
+    //row i1  is changed to (row i1 + c * row i2) 
+    //from the position "begin"
+    IntegerMatrix& addRowToRow(size_type i1, size_type i2, integer c, 
+                     size_type begin = 0);
+
+    //column j1  is changed to (column j1 + c * column i2) 
+    //from the position "begin"
+    IntegerMatrix& addColumnToColumn(size_type j1, size_type j2, integer c, 
+                           size_type begin = 0);
+    
+    //columns(rows) are swapped from the position "begin"
+    IntegerMatrix& swapRows   (size_type i1, size_type i2, size_type begin = 0);
+    IntegerMatrix& swapColumns(size_type j1, size_type j2, size_type begin = 0);
+
+    //columns(rows) are multiplied by "c" from the position "begin"
+    IntegerMatrix& multiplyRow   (size_type i, integer c, size_type begin = 0);
+    IntegerMatrix& multiplyColumn(size_type j, integer c, size_type begin = 0);
+
+    //Multiply two rows by 2 x 2 matrix on the left
+    IntegerMatrix& transformRows  (size_type i1, size_type i2,
+                                   integer a11,  integer a12,
+                                   integer a21,  integer a22, 
+                                   size_type begin = 0);
+
+    //Multiply two columns by 2 x 2 matrix on the right
+    IntegerMatrix& transformColumns(size_type j1, size_type j2,
+                                    integer a11,  integer a12,
+                                    integer a21,  integer a22, 
+                                    size_type begin = 0);
+
     //Output
     friend std::ostream& operator<<(std::ostream& os, const IntegerMatrix& M);
  
@@ -78,7 +110,6 @@ class IntegerMatrix {
     static unsigned int number_length10(integer a);
     //number of digits in the 10-base system (sign will be took into account)
 };
-
 
 class IntegerMatrix_Exception: public std::exception {
     public:
@@ -96,7 +127,6 @@ class IntegerMatrix_Exception: public std::exception {
 
 };
 
-
 class SmithForm{
 
     private:
@@ -111,7 +141,7 @@ class SmithForm{
     public:
 
     SmithForm(IntegerMatrix A);
-    // Left * Diagonal Matrix of Invariant Factors * Right == A
+    // Left * A * Right == Diagonal Matrix of Invariant Factors
 
     inline bool isCorrect() const noexcept {return isCorrect_;}
     inline IntegerMatrix::size_type getMinSize() const noexcept{
@@ -129,5 +159,21 @@ class SmithForm{
     }
 };
 
+//The greatest common divisor and related quantities
+struct Xgcd {
+    //initial numbers
+    IntegerMatrix::integer number_1, number_2;
+
+    //the greatest common divisor of number_1, number_2
+    IntegerMatrix::integer gcd;
+
+    //Bezout's coefficients
+    // factor_1 * number_1 + factor_2 * number_2 = gcd
+    IntegerMatrix::integer factor_1, factor_2;
+
+    Xgcd(IntegerMatrix::integer x1, IntegerMatrix::integer x2);
+    //if x1 == 0 and x2 == 0 the constructor set gcd = 0 and
+    //throws std::domain_error
+};
 
 #endif

@@ -286,6 +286,90 @@ IntegerMatrix& IntegerMatrix::operator*=(const IntegerMatrix & A){
 }
 
 //******************************************************************************
+//************************Manipulation of rows and columns********************
+
+//Rows
+IntegerMatrix& IntegerMatrix::addRowToRow(size_type i1, size_type i2, 
+                                          integer c, size_type begin){
+    for(size_type j = begin; j < getNumberOfColumns(); ++j) {
+        Matrix_[i1][j] += Matrix_[i2][j] * c;
+    }
+    return *this;
+}
+
+IntegerMatrix& IntegerMatrix::swapRows(size_type i1, size_type i2, 
+                                       size_type begin) {
+    if(i1 == i2) return *this;
+    for(size_type j = begin; j < getNumberOfColumns(); ++j) {
+        std::swap(Matrix_[i1][j], Matrix_[i2][j]);
+    }
+    return *this;
+}
+
+IntegerMatrix& IntegerMatrix::multiplyRow(size_type i, integer c, 
+                                          size_type begin) {
+    for(size_type j = begin; j < getNumberOfColumns(); ++j) {
+        Matrix_[i][j] *= c;
+    }
+    return *this;    
+}
+
+IntegerMatrix& IntegerMatrix::transformRows(size_type i1, size_type i2,
+                                            integer a11,  integer a12,
+                                            integer a21,  integer a22, 
+                                            size_type begin){
+
+    if(i1 == i2) return *this;
+    integer buffer;
+    for(size_type j = begin; j < getNumberOfColumns(); ++j) {
+        buffer = Matrix_[i1][j];
+        Matrix_[i1][j] = a11 * Matrix_[i1][j] + a12 * Matrix_[i2][j];
+        Matrix_[i2][j] = a21 * buffer         + a22 * Matrix_[i2][j];
+    }
+    return *this;
+}
+
+//Columns
+IntegerMatrix& IntegerMatrix::addColumnToColumn(size_type j1, size_type j2, 
+                                                integer c, size_type begin){
+    for(size_type i = begin; i < getNumberOfRows(); ++i) {
+        Matrix_[i][j1] += Matrix_[i][j2] * c;
+    }
+    return *this;
+}
+
+IntegerMatrix& IntegerMatrix::swapColumns(size_type j1, size_type j2, 
+                                          size_type begin) {
+    if( j1 == j2 ) return *this;
+    for(size_type i = begin; i < getNumberOfRows(); ++i) {
+        std::swap(Matrix_[i][j1], Matrix_[i][j2]);
+    }
+    return *this;    
+}
+
+IntegerMatrix& IntegerMatrix::multiplyColumn(size_type j, integer c, 
+                                             size_type begin) {
+    for(size_type i = begin; i < getNumberOfRows(); ++i) {
+        Matrix_[i][j] *= c;
+    }
+    return *this;
+}
+
+IntegerMatrix& IntegerMatrix::transformColumns(size_type j1, size_type j2,
+                                               integer a11,  integer a12,
+                                               integer a21,  integer a22, 
+                                               size_type begin) {
+    if(j1 == j2) return *this;
+    integer buffer;
+    for(size_type i = begin; i < getNumberOfRows(); ++i) {
+        buffer = Matrix_[i][j1];
+        Matrix_[i][j1] = Matrix_[i][j1] * a11 + Matrix_[i][j2] * a21;
+        Matrix_[i][j2] = buffer     *     a12 + Matrix_[i][j2] * a22;
+    }
+    return *this;
+}
+
+//******************************************************************************
 //********************************Output*********************************
 
 std::ostream& operator<<(std::ostream& os, const IntegerMatrix& M) {
