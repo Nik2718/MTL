@@ -19,7 +19,7 @@ class IntegerMatrix {
     public:
 
     typedef unsigned int size_type; 
-    typedef boost::multiprecision::checked_int256_t integer;
+    typedef boost::multiprecision::cpp_int integer;
 
     private:
 
@@ -52,15 +52,7 @@ class IntegerMatrix {
     inline integer& operator()(size_type i, size_type j){return Matrix_[i][j];}
 
     //Limits
-    inline static unsigned int getMaxSize(){
-        return std::numeric_limits<size_type>::max();
-    }
-    inline static integer getMaxEntry(){
-                          return std::numeric_limits<integer>::max();
-    }  
-    inline static integer getMinEntry(){
-                          return std::numeric_limits<integer>::min();
-    }
+    inline static unsigned int getMaxSize(){return 10000;}
 
     //Comparison
     bool operator==(const IntegerMatrix& A) const noexcept;
@@ -70,6 +62,8 @@ class IntegerMatrix {
     friend IntegerMatrix operator+(IntegerMatrix A, const IntegerMatrix& B);
     IntegerMatrix& operator*=(const IntegerMatrix & A);
     friend IntegerMatrix operator*(IntegerMatrix A, const IntegerMatrix& B);
+
+
 
     //Manipulation of rows and columns
 
@@ -153,9 +147,9 @@ class SmithForm{
     inline const IntegerMatrix& getRightMatrix() const noexcept{
         return Right_;
     }
-    inline const std::vector<
-    IntegerMatrix::integer>& getInvariantFactors() const noexcept{
-        return InvariantFactors_;
+    inline const IntegerMatrix::integer 
+        getInvariantFactor(IntegerMatrix::size_type i) const noexcept{
+        return InvariantFactors_.at(i);
     }
 };
 

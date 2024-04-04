@@ -10,6 +10,8 @@ void processRows   (IntegerMatrix& A, IntegerMatrix& Left, IntegerMatrix& Right,
                     size_type step);
 void processColumns(IntegerMatrix& A, IntegerMatrix& Left, IntegerMatrix& Right,
                     size_type step);
+bool isZero(IntegerMatrix& A, size_type step);
+bool isDivisible(IntegerMatrix& A, size_type& jj, size_type step);
 
 SmithForm::SmithForm(IntegerMatrix A) {
     if(A.getNumberOfRows() == 1 && A.getNumberOfColumns() == 1) {
@@ -47,8 +49,7 @@ SmithForm::SmithForm(IntegerMatrix A) {
     }
     InvariantFactors_ = std::vector<integer> (minSize_, 0);
     for(size_type i = 0; i < minSize_; ++i) InvariantFactors_[i] = A(i,i);
-
-    //std::cout << A;
+    isCorrect_ = true;
 }
 
 State algorithmStep(IntegerMatrix& A, IntegerMatrix& Left, IntegerMatrix& Right,
@@ -61,16 +62,54 @@ State algorithmStep(IntegerMatrix& A, IntegerMatrix& Left, IntegerMatrix& Right,
                           j < A.getNumberOfColumns() && isSubmatrixZero; ++j) {
                 if(A(i,j) != 0) {
                     A.swapRows(step, i, step);
+                    Left.swapRows(step, i);
                     A.swapColumns(step, j, step);
+                    Right.swapColumns(step, j);
                     isSubmatrixZero = false;
                 }
             }
         }
         if(isSubmatrixZero == true) return State::End;
     }
-    processRows   (A, Left, Right, step);
-    processColumns(A, Left, Right, step);
+    while(isZero(A, step) == false) {
+        processRows   (A, Left, Right, step);
+        processColumns(A, Left, Right, step);
+    }
+
+    size_type jj;
+    while(isDivisible(A, jj, step) == false) {
+        //isDivisible receives a reference to jj
+        A.addColumnToColumn(step, jj, 1, step);
+        Right.addColumnToColumn(step, jj, 1);
+
+        while(isZero(A, step) == false) {
+            processRows   (A, Left, Right, step);
+            processColumns(A, Left, Right, step);
+        }
+    }
     return State::Continue;
+}
+
+bool isZero(IntegerMatrix& A, size_type step) {
+    for(size_type i = step + 1; i < A.getNumberOfRows(); ++i){
+        if(A(i, step) != 0) return false;
+    }
+    for(size_type j = step + 1; j < A.getNumberOfColumns(); ++j){
+        if(A(step, j) != 0) return false;
+    }
+    return true;
+}
+
+bool isDivisible(IntegerMatrix& A, size_type& jj, size_type step) {
+    for(size_type i = step + 1; i < A.getNumberOfRows(); ++i) {
+        for(size_type j = step + 1; j < A.getNumberOfColumns(); ++j) {
+            if(A(i,j) % A(step, step) != 0) {
+                jj = j;
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 void processRows (IntegerMatrix& A, IntegerMatrix& Left, IntegerMatrix& Right,
