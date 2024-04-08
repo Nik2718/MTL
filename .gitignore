@@ -37,3 +37,5 @@ test
 *.out
 *.app
 
+errors.log
+main
