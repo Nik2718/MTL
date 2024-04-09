@@ -1,4 +1,4 @@
-#include "int_matrix.h"
+#include "../include/int_matrix.h"
 
 using integer = IntegerMatrix::integer;
 

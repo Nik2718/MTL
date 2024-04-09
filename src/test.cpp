@@ -1,4 +1,4 @@
-#include "int_matrix.h"
+#include "../include/int_matrix.h"
 #include <random>
 
 #define BOOST_TEST_MODULE Tests

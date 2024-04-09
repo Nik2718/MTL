@@ -4,7 +4,6 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <stack>
 #include <initializer_list>
 #include <stdexcept>
 #include <boost/multiprecision/cpp_int.hpp>
@@ -12,7 +11,7 @@
 class IntegerMatrix;
 class IntegerMatrix_Exception;
 class SmithForm;
-class Xgcd;
+struct Xgcd;
 
 class IntegerMatrix {
 
@@ -62,7 +61,6 @@ class IntegerMatrix {
     friend IntegerMatrix operator+(IntegerMatrix A, const IntegerMatrix& B);
     IntegerMatrix& operator*=(const IntegerMatrix & A);
     friend IntegerMatrix operator*(IntegerMatrix A, const IntegerMatrix& B);
-
 
 
     //Manipulation of rows and columns

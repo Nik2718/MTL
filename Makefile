@@ -1,25 +1,43 @@
-CC = clang++
-CFLAGS = -c -std=c++20 -Werror -pedantic
-DEBUG = -g
-BOOSTPATH = -I /opt/homebrew/Cellar/boost/1.84.0_1/include
-TESTLIB = /opt/homebrew/Cellar/boost/1.84.0_1/lib/libboost_unit_test_framework.a
+CXX = clang++
+CXXFLAGS = -c -std=c++17 -Wall -Werror -Wextra -pedantic -O2
+BOOST_PATH = -I/opt/homebrew/Cellar/boost/1.84.0_1/include
+TEST_LIB = /opt/homebrew/Cellar/boost/1.84.0_1/lib/libboost_unit_test_framework.a
 
-all: test
+SRC_DIR = ./src
+BUILD_DIR = ./build
+OUT_DIR = ./lib
 
-test: test.o int_matrix.o xgcd.o algorithm.o
-	$(CC) test.o int_matrix.o xgcd.o algorithm.o -o test $(TESTLIB)
+_OUT = libint_matrix.a
+OUT = $(OUT_DIR)/$(_OUT)
 
-test.o: test.cpp
-	$(CC) $(DEBUG) $(CFLAGS) $(BOOSTPATH) test.cpp 
+_OBJ_OUT = int_matrix.o xgcd.o algorithm.o
+_OBJ_TEST = test.o
+_OBJ_EXAMPLE = example.o
 
-int_matrix.o: int_matrix.cpp
-	$(CC) $(DEBUG) $(CFLAGS) $(BOOSTPATH) int_matrix.cpp
+OBJ_OUT = $(patsubst %, $(BUILD_DIR)/%, $(_OBJ_OUT))
+OBJ_TEST = $(BUILD_DIR)/$(_OBJ_TEST)
+OBJ_EXAMPLE = $(BUILD_DIR)/$(_OBJ_EXAMPLE)
 
-xgcd.o: xgcd.cpp
-	$(CC) $(DEBUG) $(CFLAGS) $(BOOSTPATH) xgcd.cpp
 
-algorithm.o: algorithm.cpp
-	$(CC) $(DEBUG) $(CFLAGS) $(BOOSTPATH) algorithm.cpp
+all: lib test example
+
+lib: $(OBJ_OUT)
+	ar rcs $(OUT) $^
+$(OBJ_OUT): $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $(BOOST_PATH) $< -o $@
+
+test: $(OBJ_TEST)
+	$(CXX) $^ -o test $(OUT) $(TEST_LIB)
+$(OBJ_TEST): $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $(BOOST_PATH) $< -o $@
+
+example: $(OBJ_EXAMPLE)
+	$(CXX) $^ -o example $(OUT)
+$(OBJ_EXAMPLE): $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $(BOOST_PATH) $< -o $@
+
+
+.PHONY: clean
 
 clean:
-	rm *.o test
+	rm -f $(BUILD_DIR)/*.o test example $(OUT)

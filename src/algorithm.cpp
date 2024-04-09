@@ -1,4 +1,5 @@
-#include "int_matrix.h"
+#include "../include/int_matrix.h"
+
 
 using size_type = IntegerMatrix::size_type;
 using integer = IntegerMatrix::integer;
