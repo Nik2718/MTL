@@ -38,5 +38,4 @@ Xgcd::Xgcd(integer x1, integer x2): number_1{x1}, number_2{x2} {
         factor_1 *= -1;
         factor_2 *= -1;
     }
-
 }

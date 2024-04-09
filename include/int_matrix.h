@@ -51,7 +51,7 @@ class IntegerMatrix {
     inline integer& operator()(size_type i, size_type j){return Matrix_[i][j];}
 
     //Limits
-    inline static unsigned int getMaxSize(){return 10000;}
+    inline static size_type getMaxSize(){return 10000;}
 
     //Comparison
     bool operator==(const IntegerMatrix& A) const noexcept;

@@ -1,7 +1,7 @@
 CXX = clang++
-CXXFLAGS = -c -std=c++17 -Wall -Werror -Wextra -pedantic -O2
 BOOST_PATH = -I/opt/homebrew/Cellar/boost/1.84.0_1/include
 TEST_LIB = /opt/homebrew/Cellar/boost/1.84.0_1/lib/libboost_unit_test_framework.a
+CXXFLAGS = -c -std=c++17 -Wall -Werror -Wextra -pedantic -O2
 
 SRC_DIR = ./src
 BUILD_DIR = ./build
