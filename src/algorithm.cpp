@@ -40,7 +40,7 @@ SmithForm::SmithForm(IntegerMatrix A) {
             S = algorithmStep(A, Left_, Right_, step);
         }
     }
-    catch(std::overflow_error) {
+    catch(std::overflow_error &E) {
         isCorrect_ = false;
         InvariantFactors_ = std::vector<integer> (1, 0);
         Left_ = IntegerMatrix(1,1,1);

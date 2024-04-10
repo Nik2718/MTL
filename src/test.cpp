@@ -11,9 +11,17 @@ bool checkSmithForm(const IntegerMatrix& A) {
         return false;
     }
 
-    for(IntegerMatrix::size_type i = 1; i < S.getMinSize(); ++i) {
-        if(S.getInvariantFactor(i) % S.getInvariantFactor(i - 1) != 0){
-            return false;
+    {
+        IntegerMatrix::size_type k = 1;
+        for(; S.getInvariantFactor(k - 1) != 0 && k < S.getMinSize(); ++k) {
+            if(S.getInvariantFactor(k) % S.getInvariantFactor(k - 1) != 0) {
+                return false;
+            }
+        }
+        for(; k < S.getMinSize(); ++k) {
+            if(S.getInvariantFactor(k) != 0) {
+                return false;
+            }
         }
     }
 

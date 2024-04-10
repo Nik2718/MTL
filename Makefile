@@ -1,11 +1,12 @@
 CXX = clang++
 BOOST_PATH = -I/opt/homebrew/Cellar/boost/1.84.0_1/include
 TEST_LIB = /opt/homebrew/Cellar/boost/1.84.0_1/lib/libboost_unit_test_framework.a
+PWD = /Users/nick/Documents/GitHub/MTL
 CXXFLAGS = -c -std=c++17 -Wall -Werror -Wextra -pedantic -O2
 
-SRC_DIR = ./src
-BUILD_DIR = ./build
-OUT_DIR = ./lib
+SRC_DIR = $(PWD)/src
+BUILD_DIR = $(PWD)/build
+OUT_DIR = $(PWD)/lib
 
 _OUT = libint_matrix.a
 OUT = $(OUT_DIR)/$(_OUT)
@@ -21,19 +22,24 @@ OBJ_EXAMPLE = $(BUILD_DIR)/$(_OBJ_EXAMPLE)
 
 all: lib test example
 
-lib: $(OBJ_OUT)
+lib: $(OUT)
+$(OUT): $(OBJ_OUT) | $(OUT_DIR) 
 	ar rcs $(OUT) $^
-$(OBJ_OUT): $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+$(OBJ_OUT): $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $(BOOST_PATH) $< -o $@
+$(OUT_DIR):
+	mkdir -p $(OUT_DIR)
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-test: $(OBJ_TEST)
+test: $(OBJ_TEST) $(OUT)
 	$(CXX) $^ -o test $(OUT) $(TEST_LIB)
-$(OBJ_TEST): $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+$(OBJ_TEST): $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $(BOOST_PATH) $< -o $@
 
-example: $(OBJ_EXAMPLE)
+example: $(OBJ_EXAMPLE) $(OUT)
 	$(CXX) $^ -o example $(OUT)
-$(OBJ_EXAMPLE): $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+$(OBJ_EXAMPLE): $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $(BOOST_PATH) $< -o $@
 
 

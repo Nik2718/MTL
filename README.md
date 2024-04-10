@@ -6,7 +6,7 @@ This project provides tools to calculate the [Smith normal form](https://en.wiki
 
 To build the project [boost](https://www.boost.org) libraries should be installed. They are required to use high precision integers and a unit test framework. 
 
-Then [Makefile](Makefile) must be adapted. The beginning of the Makefile should be probably changed. The first three lines contain the name of the C++ compiler,
+Then [Makefile](Makefile) must be adapted. The beginning of the Makefile should be probably changed. The first four lines contain the name of the C++ compiler,
 
 ```
 CXX = clang++
@@ -18,14 +18,20 @@ an absolute path to the boost headers,
 BOOST_PATH = -I/opt/homebrew/Cellar/boost/1.84.0_1/include
 ```
 
-and an absolute path to `libboost_unit_test_framework.a`.
+an absolute path to `libboost_unit_test_framework.a`,
 
 ```
 TEST_LIB = /opt/homebrew/Cellar/boost/1.84.0_1/lib/libboost_unit_test_framework.a
 ```
 
+and an absolute path to the project directory.
 
-At least these variables should be changed if necessary. On Windows each slash must be replaced with a backslash throughout the entire Makefile.
+```
+PWD = /Users/nick/Documents/GitHub/MTL
+```
+
+
+At least four variables should be changed if necessary. On Windows each slash must be replaced with a backslash throughout the entire Makefile.
 
 The command `make` creates 1) a static library `libint_matrix.a` in the directory `lib` 2) executable files `test` for testing and `example` for a short example
 
