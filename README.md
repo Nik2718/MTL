@@ -85,13 +85,13 @@ The product L * A * R equals to the diagonal matrix of the invariant factors
 
 The file [example.cpp](src/example.cpp) can be freely modified and recompiled by calling `make` again.
 
-After `libint_matrix.a` is created it can be used as a usual static library together with [init_matrix.h](include/int_matrix.h) and boost.
+After `libint_matrix.a` is created it can be used as a usual static library together with [init_matrix.hpp](include/int_matrix.hpp) and boost.
 
 ## The main tools
 
 ### Matrices
 
-All declarations of functions and classes are collected in [init_matrix.h](include/int_matrix.h). To create an integer matrix the constructor of the corresponding class should be called. An initializer list and some other options are available. `IntegerMatrix` is realized without use of `std::vector`.
+All declarations of functions and classes are collected in [init_matrix.hpp](include/int_matrix.hpp). To create an integer matrix the constructor of the corresponding class should be called. An initializer list and some other options are available. `IntegerMatrix` is realized without use of `std::vector`.
 
 ```C++
 IntegerMatrix A {{-2,  4, -2, -16,  -8, -6},
@@ -121,7 +121,7 @@ std::cout << A;
 ```
 
 
- Each entry of a matrix has a type `IntegerMatrix::integer`. This is a synonym for `boost::multiprecision::cpp_int`. Probably, other [boost integers](https://www.boost.org/doc/libs/1_84_0/libs/multiprecision/doc/html/boost_multiprecision/tut/ints/cpp_int.html) can be used with some bad or good consequence for speed of the program. Also some tests can fail due to too long integers. To modify the type  `IntegerMatrix::integer` it suffices to change the corresponding `typedef` in [init_matrix.h](include/int_matrix.h) and rebuild the project.
+ Each entry of a matrix has a type `IntegerMatrix::integer`. This is a synonym for `boost::multiprecision::cpp_int`. Probably, other [boost integers](https://www.boost.org/doc/libs/1_84_0/libs/multiprecision/doc/html/boost_multiprecision/tut/ints/cpp_int.html) can be used with some bad or good consequence for speed of the program. Also some tests can fail due to too long integers. To modify the type  `IntegerMatrix::integer` it suffices to change the corresponding `typedef` in [init_matrix.hpp](include/int_matrix.hpp) and rebuild the project.
 
 
 The number of rows and columns has type `IntegerMatrix::size_type`, which is a synonym for `unsigned int`.
@@ -138,7 +138,7 @@ The maximum number of rows or columns is returned by the static method `getMaxSi
 IntegerMatrix::size_type max = A.getMaxSize(); // max == 10000
 
 ```
-This method not only returns but also stores the maxim size of a matrix. To change this parameter for the class, it is sufficient to change the returning value for `getMaxSize()` in [init_matrix.h](include/int_matrix.h).
+This method not only returns but also stores the maxim size of a matrix. To change this parameter for the class, it is sufficient to change the returning value for `getMaxSize()` in [init_matrix.hpp](include/int_matrix.hpp).
 
 The operator `()` provides access to elements of a matrix. **Indices of rows and columns begin with the zero.** There is no check for out of range errors  
 
