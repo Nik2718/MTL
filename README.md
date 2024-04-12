@@ -145,7 +145,7 @@ A(1,3) = -5; //entry 14 is replaced by -5
 A(1,6) = 1; //undefined behavior
 ```
 
-### Smith form
+### The Smith form
 
 To find the Smith normal form of a matrix, a special class `SmithForm` should be used.
 

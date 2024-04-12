@@ -46,6 +46,7 @@ bool checkSmithForm(const IntegerMatrix& A) {
     return true;
 }
 
+//Empty matrix checking
 BOOST_AUTO_TEST_CASE( test_1 ) {
     try{
         IntegerMatrix A(0,1);
@@ -57,6 +58,7 @@ BOOST_AUTO_TEST_CASE( test_1 ) {
     BOOST_ERROR("Zero number of rows was not found\n");
 }
 
+//Empty matrix checking
 BOOST_AUTO_TEST_CASE( test_2 ) {
     try{
         IntegerMatrix A(1,0);
@@ -68,6 +70,7 @@ BOOST_AUTO_TEST_CASE( test_2 ) {
     BOOST_ERROR("Zero number of columns was not found\n");
 }
 
+//Matrix entries
 BOOST_AUTO_TEST_CASE( test_3 ) {
     IntegerMatrix A{{1, 2, -34},
                     {-32, 1, 3}};
@@ -83,6 +86,7 @@ BOOST_AUTO_TEST_CASE( test_3 ) {
     }
 }
 
+//Addition and comparison of matrices
 BOOST_AUTO_TEST_CASE( test_4 ) {
     IntegerMatrix A{{9,  0, -1},
                     {9, -2,  1}};
@@ -103,6 +107,7 @@ BOOST_AUTO_TEST_CASE( test_4 ) {
     BOOST_ERROR("Sum of matrices of distinct sizes\n");
 }
 
+//Multiplication of matrices
 BOOST_AUTO_TEST_CASE( test_5 ) {
 
     IntegerMatrix A{{1, 3, -1, 2},
@@ -126,6 +131,7 @@ BOOST_AUTO_TEST_CASE( test_5 ) {
     BOOST_ERROR("Product of matrices of inappropriate sizes\n"); 
 }
 
+//Function for the number of digits
 BOOST_AUTO_TEST_CASE( test_6 ) {
     BOOST_CHECK(IntegerMatrix::number_length10(0) == 1);
     BOOST_CHECK(IntegerMatrix::number_length10(-1) == 2);
@@ -136,6 +142,7 @@ BOOST_AUTO_TEST_CASE( test_6 ) {
     BOOST_CHECK(IntegerMatrix::number_length10(a) == 42);
 }
 
+//A matrix from a two-dimensional vector
 BOOST_AUTO_TEST_CASE( test_7 ) {
     IntegerMatrix A{{1, 2, -4, 222, 1, 444, 1},
                     {2, 3, -25, 333, 19, 2, 4}};
@@ -149,6 +156,7 @@ BOOST_AUTO_TEST_CASE( test_7 ) {
     //std::cout << A;
 }
 
+//GCD of two zeroes
 BOOST_AUTO_TEST_CASE(test_8) {
     try{
         Xgcd X(0,0);
@@ -160,6 +168,7 @@ BOOST_AUTO_TEST_CASE(test_8) {
     BOOST_ERROR("GCD of two zeroes was not caught\n");
 }
 
+//GCD calculation
 BOOST_AUTO_TEST_CASE(test_9) {
 
     Xgcd X(1,1);
@@ -206,6 +215,7 @@ BOOST_AUTO_TEST_CASE(test_9) {
                 X.factor_2 == 12009599006321323);
 }
 
+//Addition of rows
 BOOST_AUTO_TEST_CASE(test_10) {
     IntegerMatrix A{{1,2,3,4,5},
                     {0,3,5,7,-1}};
@@ -217,6 +227,7 @@ BOOST_AUTO_TEST_CASE(test_10) {
     BOOST_CHECK(A.addRowToRow(0,1,-2).addRowToRow(0,1,2,2) == C);
 }
 
+//Addition of columns
 BOOST_AUTO_TEST_CASE(test_11) {
     IntegerMatrix A{{1,4,-1},
                     {3,4,1}};
@@ -227,6 +238,7 @@ BOOST_AUTO_TEST_CASE(test_11) {
     BOOST_CHECK(A.addColumnToColumn(1,0,-2).addColumnToColumn(2,0,1,1) == B);
 }
 
+//Swapping rows
 BOOST_AUTO_TEST_CASE(test_12) {
     IntegerMatrix A{{2,3,-10},
                     {3,4,10}};
@@ -235,6 +247,7 @@ BOOST_AUTO_TEST_CASE(test_12) {
     BOOST_CHECK(A.swapRows(0,1,1) == B);
 }
 
+//Swapping columns
 BOOST_AUTO_TEST_CASE(test_13) {
     IntegerMatrix A{{2,1,-1},
                     {3,4,2}};
@@ -243,6 +256,7 @@ BOOST_AUTO_TEST_CASE(test_13) {
     BOOST_CHECK(A.swapColumns(1,2,1) == B);
 }
 
+//Multiplying a row by a number
 BOOST_AUTO_TEST_CASE(test_14) {
     IntegerMatrix A{{3,-6, 1, 3},
                     {4, 8, -1, 2}};
@@ -251,6 +265,7 @@ BOOST_AUTO_TEST_CASE(test_14) {
     BOOST_CHECK(A.multiplyRow(1,-3,1) == B);
 }
 
+//Multiplying a column by a number
 BOOST_AUTO_TEST_CASE(test_15){
     IntegerMatrix A{{-1,3,6},
                     {5, 8, -1},
@@ -261,6 +276,7 @@ BOOST_AUTO_TEST_CASE(test_15){
     BOOST_CHECK(A.multiplyColumn(2,-2, 1) == B);
 }
 
+//Quasi-elementary transformation of rows
 BOOST_AUTO_TEST_CASE(test_16){
     IntegerMatrix A{{0,1,0,-1},
                     {3,4,5,-1},
@@ -276,6 +292,7 @@ BOOST_AUTO_TEST_CASE(test_16){
                                 1) == B);
 }
 
+//Quasi-elementary transformation of columns
 BOOST_AUTO_TEST_CASE(test_17) {
     IntegerMatrix A{{0,1,0,-1},
                     {3,4,5,-1},
@@ -291,40 +308,48 @@ BOOST_AUTO_TEST_CASE(test_17) {
                                    1) == B);
 }
 
+//The Smith form of a 3 x 3 matrix
 BOOST_AUTO_TEST_CASE( test_18 ) {
     BOOST_CHECK(checkSmithForm({{1, -2, -11},
                                 {-2, 11, 43}, 
                                 {-11, 43, 189}}));
 }
 
+//The Smith form of a zero
 BOOST_AUTO_TEST_CASE( test_19 ) {
     BOOST_CHECK(checkSmithForm({{0}}));
 }
 
+//The Smith form of a number
 BOOST_AUTO_TEST_CASE( test_20 ) {
     BOOST_CHECK(checkSmithForm({{1}}));
 }
 
+//The Smith form of a row
 BOOST_AUTO_TEST_CASE( test_21 ) {
     BOOST_CHECK(checkSmithForm({{1,3 -2, 1}}));
 }
 
+//The Smith form of a column
 BOOST_AUTO_TEST_CASE( test_22 ) {
     BOOST_CHECK(checkSmithForm({{2},
                                 {-4},
                                 {8}}));
 }
 
+//The Smith form of a zero matrix
 BOOST_AUTO_TEST_CASE( test_23 ) {
     BOOST_CHECK(checkSmithForm({{0,0,0},
                                 {0,0,0}}));
 }
 
+//The Smith form of a diagonal matrix
 BOOST_AUTO_TEST_CASE( test_24 ) {
     BOOST_CHECK(checkSmithForm({{-3, 0, 0},
                                 {0, 7, 0}}));
 }
 
+//The Smith form of a 4 x 3 matrix
 BOOST_AUTO_TEST_CASE( test_25 ) {
     BOOST_CHECK(checkSmithForm({{-3827652,    19287362, 26767677},
                                 {7262524111,  92272654, 989898  },
@@ -332,6 +357,7 @@ BOOST_AUTO_TEST_CASE( test_25 ) {
                                 {909090,      0,        18272,  }}));
 }
 
+//The Smith form of a random matrix
 BOOST_AUTO_TEST_CASE( test_26 ) {
 
     std::random_device rd1, rd2;
@@ -352,6 +378,7 @@ BOOST_AUTO_TEST_CASE( test_26 ) {
     BOOST_CHECK(checkSmithForm(A));
 }
 
+//The Smith form of a random matrix
 BOOST_AUTO_TEST_CASE( test_27 ) {
 
     std::random_device rd1, rd2;
@@ -372,6 +399,7 @@ BOOST_AUTO_TEST_CASE( test_27 ) {
     BOOST_CHECK(checkSmithForm(A));
 }
 
+//The Smith form of a matrix with large entries
 BOOST_AUTO_TEST_CASE( test_28 ) {
     IntegerMatrix A(3, 3, 0);
 
@@ -390,6 +418,7 @@ BOOST_AUTO_TEST_CASE( test_28 ) {
     BOOST_CHECK(checkSmithForm(A));
 }
 
+//The Smith form of a sparse matrix
 BOOST_AUTO_TEST_CASE( test_29 ) {
     IntegerMatrix A(100, 100, 0);
     A(23, 76) = 1;
@@ -397,6 +426,7 @@ BOOST_AUTO_TEST_CASE( test_29 ) {
     BOOST_CHECK(checkSmithForm(A));
 }
 
+//The Smith form of a matrix with zero blocks
 BOOST_AUTO_TEST_CASE( test_30 ) {
     IntegerMatrix A(250, 250, 0);
     for (IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
@@ -408,6 +438,7 @@ BOOST_AUTO_TEST_CASE( test_30 ) {
     BOOST_CHECK(checkSmithForm(A));
 }
 
+//The Smith form of a diagonal matrix
 BOOST_AUTO_TEST_CASE( test_31 ) {
     IntegerMatrix A(20, 20, 0);
     for (IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
@@ -418,6 +449,7 @@ BOOST_AUTO_TEST_CASE( test_31 ) {
     BOOST_CHECK(checkSmithForm(A));
 }
 
+//The Smith form of a 6 x 6 matrix
 BOOST_AUTO_TEST_CASE( test_32 ) {
     IntegerMatrix A{{166681, 12880, 2280, -7840, 1120, 6440},
                     {12880,	 1122,  0,    -560,	 0,    560 },
