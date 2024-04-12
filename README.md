@@ -170,7 +170,7 @@ Then the number of invariant factors equals `getMinSize()`. The method `getInvar
 for (IntegerMatrix::size_type i = 0; i < S.getMinSize(); ++i) {
     std::cout << S.getInvariantFactor(i) << ' ';
 }
-//printing all invariant factor
+//printing all invariant factors
 ```
 The object `S` also stores left and right transformation matrices:
 
