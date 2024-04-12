@@ -1,38 +1,44 @@
-#include "../include/int_matrix.h"
+//Tests
+
+#include "../include/int_matrix.hpp"
 #include <random>
 
 #define BOOST_TEST_MODULE Tests
 #include  <boost/test/unit_test.hpp>
 
+//Checking Smith normal form
 bool checkSmithForm(const IntegerMatrix& A) {
     SmithForm S(A);
-    if(S.isCorrect() == false) {
+    if (S.isCorrect() == false) {
         std::cout << "Overflow was detected" << std::endl;
         return false;
     }
 
+    //Checking that an invariant factors divides each next one
     {
         IntegerMatrix::size_type k = 1;
-        for(; S.getInvariantFactor(k - 1) != 0 && k < S.getMinSize(); ++k) {
-            if(S.getInvariantFactor(k) % S.getInvariantFactor(k - 1) != 0) {
+        for (; S.getInvariantFactor(k - 1) != 0 && k < S.getMinSize(); ++k) {
+            if (S.getInvariantFactor(k) % S.getInvariantFactor(k - 1) != 0) {
                 return false;
             }
         }
-        for(; k < S.getMinSize(); ++k) {
-            if(S.getInvariantFactor(k) != 0) {
+        for (; k < S.getMinSize(); ++k) {
+            if (S.getInvariantFactor(k) != 0) {
                 return false;
             }
         }
     }
 
+    //Check that multiplication of A by the transformation matrices is
+    //the diagonal matrix of invariant factors
     IntegerMatrix D = S.getLeftMatrix() * A * S.getRightMatrix();
 
-    for(IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
-        for(IntegerMatrix::size_type j = 0; j < A.getNumberOfColumns(); ++j) {
-            if(i == j && D(i,i) != S.getInvariantFactor(i)) {
+    for (IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
+        for (IntegerMatrix::size_type j = 0; j < A.getNumberOfColumns(); ++j) {
+            if (i == j && D(i,i) != S.getInvariantFactor(i)) {
                 return false;
             }
-            if(i != j && D(i,j) != 0) {
+            if (i != j && D(i,j) != 0) {
                 return false;
             } 
         }
@@ -40,18 +46,18 @@ bool checkSmithForm(const IntegerMatrix& A) {
     return true;
 }
 
-BOOST_AUTO_TEST_CASE( test_1 ){
+BOOST_AUTO_TEST_CASE( test_1 ) {
     try{
         IntegerMatrix A(0,1);
     }
-    catch(IntegerMatrix_Exception &E){
+    catch(IntegerMatrix_Exception &E) {
         //std::cout << E.what() << '\n';
         return;
     }
     BOOST_ERROR("Zero number of rows was not found\n");
 }
 
-BOOST_AUTO_TEST_CASE( test_2 ){
+BOOST_AUTO_TEST_CASE( test_2 ) {
     try{
         IntegerMatrix A(1,0);
     }
@@ -70,8 +76,8 @@ BOOST_AUTO_TEST_CASE( test_3 ) {
     //std::cout << A;
     BOOST_CHECK(A.getNumberOfRows() == 2);
     BOOST_CHECK(A.getNumberOfColumns() == 3);
-    for(int i = 0; i < 2; ++i){
-        for(int j = 0; j < 3; ++j){
+    for (int i = 0; i < 2; ++i){
+        for (int j = 0; j < 3; ++j){
             BOOST_CHECK(A(i,j) == V[i][j]);
         }
     }
@@ -91,7 +97,7 @@ BOOST_AUTO_TEST_CASE( test_4 ) {
         IntegerMatrix D(5,5);
         C = A + D;
     }
-    catch(IntegerMatrix_Exception& E){
+    catch(IntegerMatrix_Exception& E) {
         return;
     }
     BOOST_ERROR("Sum of matrices of distinct sizes\n");
@@ -110,17 +116,17 @@ BOOST_AUTO_TEST_CASE( test_5 ) {
     IntegerMatrix C {{14, 16, -8},
                      {58, 2,   2}};
 
-    BOOST_CHECK(C == A * B);   
+    BOOST_CHECK(C == A * B);
     try {
         C = B * A;
     }
-    catch(IntegerMatrix_Exception& E){
+    catch(IntegerMatrix_Exception& E) {
         return;
     }
     BOOST_ERROR("Product of matrices of inappropriate sizes\n"); 
 }
 
-BOOST_AUTO_TEST_CASE( test_6 ){
+BOOST_AUTO_TEST_CASE( test_6 ) {
     BOOST_CHECK(IntegerMatrix::number_length10(0) == 1);
     BOOST_CHECK(IntegerMatrix::number_length10(-1) == 2);
     BOOST_CHECK(IntegerMatrix::number_length10(999999) == 6);
@@ -143,7 +149,7 @@ BOOST_AUTO_TEST_CASE( test_7 ) {
     //std::cout << A;
 }
 
-BOOST_AUTO_TEST_CASE(test_8){
+BOOST_AUTO_TEST_CASE(test_8) {
     try{
         Xgcd X(0,0);
     }
@@ -154,7 +160,7 @@ BOOST_AUTO_TEST_CASE(test_8){
     BOOST_ERROR("GCD of two zeroes was not caught\n");
 }
 
-BOOST_AUTO_TEST_CASE(test_9){
+BOOST_AUTO_TEST_CASE(test_9) {
 
     Xgcd X(1,1);
     BOOST_CHECK(X.gcd == 1 && X.factor_1 == 0 && X.factor_2 == 1);
@@ -187,7 +193,8 @@ BOOST_AUTO_TEST_CASE(test_9){
     BOOST_CHECK(X.gcd == 20346417 && X.factor_1 == 19 && X.factor_2 == -244);
 
     X = Xgcd(2760727302559, 3741760723);
-    BOOST_CHECK(X.gcd == 1 && X.factor_1 == 880326443 && X.factor_2 == -649518081532);
+    BOOST_CHECK(X.gcd == 1 && X.factor_1 == 880326443 &&
+                              X.factor_2 == -649518081532);
 
     X = Xgcd(-324489611, 324670817);
     BOOST_CHECK(X.gcd == 10067 && X.factor_1 == -12542 && X.factor_2 == -12535);
@@ -199,7 +206,7 @@ BOOST_AUTO_TEST_CASE(test_9){
                 X.factor_2 == 12009599006321323);
 }
 
-BOOST_AUTO_TEST_CASE(test_10){
+BOOST_AUTO_TEST_CASE(test_10) {
     IntegerMatrix A{{1,2,3,4,5},
                     {0,3,5,7,-1}};
     IntegerMatrix B{{1,8,13,18,3},
@@ -210,7 +217,7 @@ BOOST_AUTO_TEST_CASE(test_10){
     BOOST_CHECK(A.addRowToRow(0,1,-2).addRowToRow(0,1,2,2) == C);
 }
 
-BOOST_AUTO_TEST_CASE(test_11){
+BOOST_AUTO_TEST_CASE(test_11) {
     IntegerMatrix A{{1,4,-1},
                     {3,4,1}};
 
@@ -220,7 +227,7 @@ BOOST_AUTO_TEST_CASE(test_11){
     BOOST_CHECK(A.addColumnToColumn(1,0,-2).addColumnToColumn(2,0,1,1) == B);
 }
 
-BOOST_AUTO_TEST_CASE(test_12){
+BOOST_AUTO_TEST_CASE(test_12) {
     IntegerMatrix A{{2,3,-10},
                     {3,4,10}};
     IntegerMatrix B{{2,4,10},
@@ -228,7 +235,7 @@ BOOST_AUTO_TEST_CASE(test_12){
     BOOST_CHECK(A.swapRows(0,1,1) == B);
 }
 
-BOOST_AUTO_TEST_CASE(test_13){
+BOOST_AUTO_TEST_CASE(test_13) {
     IntegerMatrix A{{2,1,-1},
                     {3,4,2}};
     IntegerMatrix B{{2,1,-1},
@@ -251,7 +258,7 @@ BOOST_AUTO_TEST_CASE(test_15){
     IntegerMatrix B{{-1,3,6},
                     {5, 8, 2},
                     {9, 4, 4}};
-    BOOST_CHECK(A.multiplyColumn(2,-2, 1) == B);   
+    BOOST_CHECK(A.multiplyColumn(2,-2, 1) == B);
 }
 
 BOOST_AUTO_TEST_CASE(test_16){
@@ -337,8 +344,8 @@ BOOST_AUTO_TEST_CASE( test_26 ) {
                          std::default_random_engine(rd2()));
 
     IntegerMatrix A(getRandomSize(), getRandomSize(), 0);
-    for(IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
-        for(IntegerMatrix::size_type j = 0; j < A.getNumberOfColumns(); ++j) {
+    for (IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
+        for (IntegerMatrix::size_type j = 0; j < A.getNumberOfColumns(); ++j) {
             A(i,j) = getRandomEntry();
         }
     }
@@ -357,8 +364,8 @@ BOOST_AUTO_TEST_CASE( test_27 ) {
                     std::default_random_engine(rd2()));
 
     IntegerMatrix A(getRandomSize(), getRandomSize(), 0);
-    for(IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
-        for(IntegerMatrix::size_type j = 0; j < A.getNumberOfColumns(); ++j) {
+    for (IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
+        for (IntegerMatrix::size_type j = 0; j < A.getNumberOfColumns(); ++j) {
             A(i,j) = getRandomEntry();
         }
     }
@@ -392,9 +399,9 @@ BOOST_AUTO_TEST_CASE( test_29 ) {
 
 BOOST_AUTO_TEST_CASE( test_30 ) {
     IntegerMatrix A(250, 250, 0);
-    for(IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
-        for(IntegerMatrix::size_type j = 0; j < A.getNumberOfColumns(); ++j) {
-            if(i < 125 || j < 125) A(i,j) = 0;
+    for (IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
+        for (IntegerMatrix::size_type j = 0; j < A.getNumberOfColumns(); ++j) {
+            if (i < 125 || j < 125) A(i,j) = 0;
             else A(i,j) = (((IntegerMatrix::integer)i) * j) - i;
         }
     }
@@ -403,9 +410,9 @@ BOOST_AUTO_TEST_CASE( test_30 ) {
 
 BOOST_AUTO_TEST_CASE( test_31 ) {
     IntegerMatrix A(20, 20, 0);
-    for(IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
-        for(IntegerMatrix::size_type j = 0; j < A.getNumberOfColumns(); ++j) {
-            if(i == j) A(i,j) = - 3 * i - 7;
+    for (IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
+        for (IntegerMatrix::size_type j = 0; j < A.getNumberOfColumns(); ++j) {
+            if (i == j) A(i,j) = - 3 * i - 7;
         }
     }
     BOOST_CHECK(checkSmithForm(A));

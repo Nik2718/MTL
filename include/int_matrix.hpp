@@ -6,6 +6,7 @@
 #include <vector>
 #include <initializer_list>
 #include <stdexcept>
+
 #include <boost/multiprecision/cpp_int.hpp>
 
 class IntegerMatrix;
@@ -29,6 +30,7 @@ class IntegerMatrix {
     public:
 
     //Constructors and destructor
+    //An empty matrix is not allowed
     IntegerMatrix(size_type row = 1, size_type col = 1, integer entry = 0);
     IntegerMatrix(const std::vector<std::vector<integer>>& M);
     IntegerMatrix(const std::initializer_list<
@@ -65,12 +67,12 @@ class IntegerMatrix {
 
     //Manipulation of rows and columns
 
-    //row i1  is changed to (row i1 + c * row i2) 
+    //row i1  is changed to (row i1 + c * row i2)
     //from the position "begin"
     IntegerMatrix& addRowToRow(size_type i1, size_type i2, integer c, 
                      size_type begin = 0);
 
-    //column j1  is changed to (column j1 + c * column i2) 
+    //column j1  is changed to (column j1 + c * column i2)
     //from the position "begin"
     IntegerMatrix& addColumnToColumn(size_type j1, size_type j2, integer c, 
                            size_type begin = 0);
@@ -95,18 +97,18 @@ class IntegerMatrix {
                                     integer a21,  integer a22, 
                                     size_type begin = 0);
 
-    //Output
+    //Formatted output of a matrix
     friend std::ostream& operator<<(std::ostream& os, const IntegerMatrix& M);
- 
+
     //Auxiliary functions
     static unsigned int number_length10(integer a);
-    //number of digits in the 10-base system (sign will be took into account)
+    //number of digits in the 10-base system (the sign is took into account)
 };
 
 class IntegerMatrix_Exception: public std::exception {
     public:
 
-    explicit IntegerMatrix_Exception(const std::string& message): 
+    explicit IntegerMatrix_Exception(const std::string& message):
                                              message_{message} {}
 
     const char* what() const noexcept {
@@ -136,17 +138,17 @@ class SmithForm{
     // Left * A * Right == Diagonal Matrix of Invariant Factors
 
     inline bool isCorrect() const noexcept {return isCorrect_;}
-    inline IntegerMatrix::size_type getMinSize() const noexcept{
+    inline IntegerMatrix::size_type getMinSize() const noexcept {
         return minSize_;
     }
-    inline const IntegerMatrix& getLeftMatrix() const noexcept{
+    inline const IntegerMatrix& getLeftMatrix() const noexcept {
         return Left_;
     }
-    inline const IntegerMatrix& getRightMatrix() const noexcept{
+    inline const IntegerMatrix& getRightMatrix() const noexcept {
         return Right_;
     }
     inline const IntegerMatrix::integer 
-        getInvariantFactor(IntegerMatrix::size_type i) const noexcept{
+        getInvariantFactor(IntegerMatrix::size_type i) const noexcept {
         return InvariantFactors_.at(i);
     }
 };

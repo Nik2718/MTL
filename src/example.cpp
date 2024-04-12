@@ -1,4 +1,6 @@
-#include "../include/int_matrix.h"
+//A short example
+
+#include "../include/int_matrix.hpp"
 #include <iostream>
 
 
@@ -19,7 +21,7 @@ int main(){
     SmithForm S(A);
 
     std::cout << "The invariant factors of the matrix A are ";
-    for(IntegerMatrix::size_type i = 0; i < S.getMinSize(); ++i) {
+    for (IntegerMatrix::size_type i = 0; i < S.getMinSize(); ++i) {
         std::cout << S.getInvariantFactor(i) << ' ';
     }
     std::cout << "\n\n";
@@ -30,6 +32,6 @@ int main(){
                                       S.getRightMatrix() << '\n';
 
     std::cout << "The product L * A * R equals to " <<
-                "the diagonal matrix of the invariant factors" << 
+                "the diagonal matrix of the invariant factors" <<
                 S.getLeftMatrix() * A * S.getRightMatrix() << "\n";
 }

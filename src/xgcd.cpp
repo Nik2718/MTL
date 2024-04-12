@@ -1,9 +1,12 @@
-#include "../include/int_matrix.h"
+//The greatest common divisor and Bezout's coefficients
+
+#include "../include/int_matrix.hpp"
 
 using integer = IntegerMatrix::integer;
 
+//The greatest common divisor of two numbers
 Xgcd::Xgcd(integer x1, integer x2): number_1{x1}, number_2{x2} {
-    if(x1 == 0 && x2 == 0){
+    if (x1 == 0 && x2 == 0){
         throw std::domain_error("GCD of two zeroes is undefined");
         gcd = 0;
         factor_1 = 0;
@@ -17,7 +20,7 @@ Xgcd::Xgcd(integer x1, integer x2): number_1{x1}, number_2{x2} {
     factor_2 = 1;
 
     integer quotient;
-    while(x2) {
+    while (x2) {
         quotient = x1/x2;
 
         factor_1_previous = factor_1_previous - quotient * factor_1;
@@ -33,7 +36,7 @@ Xgcd::Xgcd(integer x1, integer x2): number_1{x1}, number_2{x2} {
     factor_1 = factor_1_previous;
     factor_2 = factor_2_previous;
 
-    if(gcd < 0){
+    if (gcd < 0){
         gcd *= -1;
         factor_1 *= -1;
         factor_2 *= -1;

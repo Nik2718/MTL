@@ -1,12 +1,12 @@
 # The Smith normal form of an integer matrix with C++
 
-This project provides tools to calculate the [Smith normal form](https://en.wikipedia.org/wiki/Smith_normal_form) of an integer matrix.
+This project provides tools to calculate the [Smith normal form](https://en.wikipedia.org/wiki/Smith_normal_form) of an integer matrix. The project was tested on macOS Sonoma 14.4.1 with clang 15.0.0, boost 1.84.0.
 
-## Getting started
+## Get started
 
-To build the project [boost](https://www.boost.org) libraries should be installed. They are required to use high precision integers and a unit test framework. 
+To build the project [boost](https://www.boost.org) libraries should be installed. They are required to use higher precision [integers](https://www.boost.org/doc/libs/1_84_0/libs/multiprecision/doc/html/boost_multiprecision/tut/ints/cpp_int.html) and a unit test [framework](https://www.boost.org/doc/libs/1_34_1/libs/test/doc/index.html). 
 
-Then [Makefile](Makefile) must be adapted. The beginning of the Makefile should be probably changed. The first four lines contain the name of the C++ compiler,
+Then [Makefile](Makefile) must be adapted. The beginning of the Makefile should be probably changed. The first three variables contain the name of a C++ compiler,
 
 ```
 CXX = clang++
@@ -18,22 +18,17 @@ an absolute path to the boost headers,
 BOOST_PATH = -I/opt/homebrew/Cellar/boost/1.84.0_1/include
 ```
 
-an absolute path to `libboost_unit_test_framework.a`,
+and an absolute path to `libboost_unit_test_framework.a`,
 
 ```
-TEST_LIB = /opt/homebrew/Cellar/boost/1.84.0_1/lib/libboost_unit_test_framework.a
-```
-
-and an absolute path to the project directory.
-
-```
-PWD = /Users/nick/Documents/GitHub/MTL
+TEST_LIB = \
+/opt/homebrew/Cellar/boost/1.84.0_1/lib/libboost_unit_test_framework.a
 ```
 
 
-At least four variables should be changed if necessary. On Windows each slash must be replaced with a backslash throughout the entire Makefile.
+At least this variables should be changed if necessary.
 
-The command `make` creates 1) a static library `libint_matrix.a` in the directory `lib` 2) executable files `test` for testing and `example` for a short example
+The command `make` creates a static library `libint_matrix.a` in the directory `lib`, executable files `test` for testing and `example` for a short example
 
 ```
 make
@@ -93,7 +88,7 @@ After `libint_matrix.a` is created it can be used as a usual static library toge
 
 ### Matrices
 
-All declarations of functions and classes are collected in [init_matrix.h](include/int_matrix.h). To create an integer matrix the constructor of the corresponding class should be called. List initialization and some other options are available. `IntegerMatrix` is realized without use of `std::vector`.
+All declarations of functions and classes are collected in [init_matrix.h](include/int_matrix.h). To create an integer matrix the constructor of the corresponding class should be called. An initializer list and some other options are available. `IntegerMatrix` is realized without use of `std::vector`.
 
 ```C++
 IntegerMatrix A {{-2,  4, -2, -16,  -8, -6},
@@ -130,8 +125,8 @@ The number of rows and columns has type `IntegerMatrix::size_type`, which is a s
 
 
 ```C++
-IntegerMatrix::size_type m = A.getNumberOfRows(); // n == 4
-IntegerMatrix::size_type n = A.getNumberOfColumns(); // m == 6
+IntegerMatrix::size_type m = A.getNumberOfRows(); // m == 4
+IntegerMatrix::size_type n = A.getNumberOfColumns(); // n == 6
 ```
 
 The maximum number of rows or columns is returned by the static method `getMaxSize()`.
@@ -146,13 +141,13 @@ The operator `()` provides access to elements of a matrix. **Indices of rows and
 
 ```C++
 IntegerMatrix::integer a = A(0,1); // a == 4
-A(1,3) = -5; //entry is changed
+A(1,3) = -5; //entry 14 is replaced by -5
 A(1,6) = 1; //undefined behavior
 ```
 
 ### Smith form
 
-To find a Smith normal form of a matrix, a special class `SmithForm` should be used.
+To find the Smith normal form of a matrix, a special class `SmithForm` should be used.
 
 ```C++
 SmithForm S(A); //Smith Form is calculated
@@ -169,10 +164,10 @@ bool b = (S.getMinSize() == std::min(m, n));
 Then the number of invariant factors equals `getMinSize()`. The method `getInvariantFactor(i)` returns the i-th invariant factor.
 
 ```C++
-for(IntegerMatrix::size_type i = 0; i < S.getMinSize(); ++i) {
+for (IntegerMatrix::size_type i = 0; i < S.getMinSize(); ++i) {
     std::cout << S.getInvariantFactor(i) << ' ';
 }
-//print all invariant factor
+//printing all invariant factor
 ```
 The object `S` also stores left and right transformation matrices:
 
@@ -180,7 +175,7 @@ The object `S` also stores left and right transformation matrices:
 std::cout << S.getLeftMatrix() << '\n';
 std::cout << S.getRightMatrix() << '\n';
 ```
-The class `IntegerMatrix` overload multiplication for matrices and we can calculate:
+The class `IntegerMatrix` overloads multiplication for matrices and we can calculate:
 
 ```C++
 std::cout << S.getLeftMatrix() * A * S.getRightMatrix() << "\n";
