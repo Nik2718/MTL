@@ -1,6 +1,9 @@
 # The Smith normal form of an integer matrix with C++
 
-This project provides tools to calculate the [Smith normal form](https://en.wikipedia.org/wiki/Smith_normal_form) of an integer matrix. The project was tested on macOS Sonoma 14.4.1 with clang 15.0.0, boost 1.84.0.
+This project provides tools to calculate the [Smith normal form](https://en.wikipedia.org/wiki/Smith_normal_form) of an integer matrix. The project was tested on 
+
+- macOS Sonoma 14.4.1, clang 15.0.0, boost 1.84.0;
+- Debian GNU/Linux 12, g++ 12.2.0, boost 1.84.0.
 
 ## Get started
 
