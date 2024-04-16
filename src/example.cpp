@@ -7,9 +7,9 @@
 int main(){
 
     std::cout << '\n';
-    std::cout << "**********************************************" << '\n';
-    std::cout << "This is is an example of work with the library" << '\n';
-    std::cout << "**********************************************" << "\n\n";
+    std::cout << "*************************************************" << '\n';
+    std::cout << "This is is an example of working with the library" << '\n';
+    std::cout << "*************************************************" << "\n\n";
 
     IntegerMatrix A{{-2, 4, -2, -16, -8, -6},
                     {-2, 10, 4, 14, -8, 0},

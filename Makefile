@@ -7,7 +7,7 @@ BOOST_PATH := -I/opt/homebrew/Cellar/boost/1.84.0_1/include
 #A path to libboost_unit_test_framework.a
 TEST_LIB := \
 /opt/homebrew/Cellar/boost/1.84.0_1/lib/libboost_unit_test_framework.a
-#The compilation flags
+#Compilation flags
 CXXFLAGS := -c -std=c++17 -Wall -Werror -Wextra -pedantic -O2
 
 #A path to the directory with *.cpp files
@@ -30,7 +30,6 @@ _OBJ_EXAMPLE := example.o
 OBJ_OUT := ${patsubst %, ${BUILD_DIR}/%, ${_OBJ_OUT}}
 OBJ_TEST := ${BUILD_DIR}/${_OBJ_TEST}
 OBJ_EXAMPLE := ${BUILD_DIR}/${_OBJ_EXAMPLE}
-
 
 all: dir lib test example
 

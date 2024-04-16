@@ -1,6 +1,6 @@
 # The Smith normal form of an integer matrix with C++
 
-This project provides tools to calculate the [Smith normal form](https://en.wikipedia.org/wiki/Smith_normal_form) of an integer matrix. The project was tested on 
+This pet project provides tools for calculating the [Smith normal form](https://en.wikipedia.org/wiki/Smith_normal_form) of an integer matrix. The program was tested on 
 
 - macOS Sonoma 14.4.1, clang 15.0.0, boost 1.84.0;
 - Debian GNU/Linux 12, g++ 12.2.0, boost 1.84.0.
@@ -49,9 +49,9 @@ Running 32 test cases...
 ```
 ./example
 
-**********************************************
-This is is an example of work with the library
-**********************************************
+*************************************************
+This is is an example of working with the library
+*************************************************
 
 Let's consider an integer matrix A equal to 
 || -2   4  -2 -16  -8  -6||
@@ -121,10 +121,10 @@ std::cout << A;
 ```
 
 
- Each entry of a matrix has a type `IntegerMatrix::integer`. This is a synonym for `boost::multiprecision::cpp_int`. Probably, other [boost integers](https://www.boost.org/doc/libs/1_84_0/libs/multiprecision/doc/html/boost_multiprecision/tut/ints/cpp_int.html) can be used with some bad or good consequence for speed of the program. Also some tests can fail due to too long integers. To modify the type  `IntegerMatrix::integer` it suffices to change the corresponding `typedef` in [init_matrix.hpp](include/int_matrix.hpp) and rebuild the project.
+ Each entry of a matrix has a type `IntegerMatrix::integer`. This is a synonym for `boost::multiprecision::cpp_int`. Probably, other **signed** [boost integers](https://www.boost.org/doc/libs/1_84_0/libs/multiprecision/doc/html/boost_multiprecision/tut/ints/cpp_int.html) can be used with some bad or good consequence for speed of the program. Some tests can fail due to a too small range for integers. To modify the type  `IntegerMatrix::integer` it suffices to change the corresponding `typedef` in [init_matrix.hpp](include/int_matrix.hpp) and rebuild the project.
 
 
-The number of rows and columns has type `IntegerMatrix::size_type`, which is a synonym for `unsigned int`.
+The number of rows and columns has the type `IntegerMatrix::size_type`, which is a synonym for `unsigned int`.
 
 
 ```C++
@@ -138,7 +138,7 @@ The maximum number of rows or columns is returned by the static method `getMaxSi
 IntegerMatrix::size_type max = A.getMaxSize(); // max == 10000
 
 ```
-This method not only returns but also stores the maxim size of a matrix. To change this parameter for the class, it is sufficient to change the returning value for `getMaxSize()` in [init_matrix.hpp](include/int_matrix.hpp).
+To change this parameter for the class, it is sufficient to change the returning value for `getMaxSize()` in [init_matrix.hpp](include/int_matrix.hpp).
 
 The operator `()` provides access to elements of a matrix. **Indices of rows and columns begin with the zero.** There is no check for out of range errors  
 
@@ -164,7 +164,7 @@ The method `getMinSize()` returns the minimum number of rows and columns of the 
 bool b = (S.getMinSize() == std::min(m, n));
 //b == true
 ```
-Then the number of invariant factors equals `getMinSize()`. The method `getInvariantFactor(i)` returns the i-th invariant factor.
+The number of invariant factors equals `getMinSize()`. The method `getInvariantFactor(i)` returns the i-th invariant factor.
 
 ```C++
 for (IntegerMatrix::size_type i = 0; i < S.getMinSize(); ++i) {
@@ -182,7 +182,7 @@ The class `IntegerMatrix` overloads multiplication for matrices and we can calcu
 
 ```C++
 std::cout << S.getLeftMatrix() * A * S.getRightMatrix() << "\n";
-//The output is the diagonal matrix of invariant factors
+//The output is a diagonal matrix of the invariant factors
 ```
 
 

@@ -14,7 +14,7 @@ Xgcd::Xgcd(integer x1, integer x2): number_1{x1}, number_2{x2} {
         return;
     }
 
-    //Extended Euclidean algorithm
+    //The extended Euclidean algorithm
     integer factor_1_previous = 1, factor_2_previous = 0;
     factor_1 = 0;
     factor_2 = 1;

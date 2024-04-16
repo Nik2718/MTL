@@ -30,14 +30,13 @@ IntegerMatrix::IntegerMatrix(size_type row, size_type col, integer entry) {
     }
     for (size_type i = 0; i < numberOfRows_; ++i) {
         Matrix_[i] = new integer[numberOfColumns_];
-
         if (! Matrix_[i]) {
             std::cerr << "Memory error when creating a matrix" << std::endl;
             exit(-1);            
         }
     }
 
-    //All entries will be equal
+    //All entries will be equal to "entry"
     for (size_type i = 0; i < numberOfRows_; ++i) {
         for (size_type j = 0; j < numberOfColumns_; ++j) {
             Matrix_[i][j] = entry;
@@ -45,7 +44,7 @@ IntegerMatrix::IntegerMatrix(size_type row, size_type col, integer entry) {
     }
 }
 
-//Creating the matrix as copy of two-dimensional vector
+//Creating the matrix as copy of a two-dimensional vector
 IntegerMatrix::IntegerMatrix(const std::vector<std::vector<integer>>& M) {
     //Checking arguments
     if (M.size() == 0 || M[0].size() == 0) {
@@ -68,7 +67,6 @@ IntegerMatrix::IntegerMatrix(const std::vector<std::vector<integer>>& M) {
     }
     for (size_type i = 0; i < numberOfRows_; ++i) {
         Matrix_[i] = new integer[numberOfColumns_];
-
         if (! Matrix_[i]) {
             std::cerr << "Memory error when creating a matrix" << std::endl;
             exit(-1);            
@@ -107,7 +105,6 @@ IntegerMatrix::IntegerMatrix(const std::initializer_list<
     }
     for (size_type i = 0; i < numberOfRows_; ++i) {
         Matrix_[i] = new integer[numberOfColumns_];
-
         if (! Matrix_[i]) {
             std::cerr << "Memory error when creating a matrix" << std::endl;
             exit(-1);
@@ -193,6 +190,7 @@ IntegerMatrix& IntegerMatrix::operator=(const IntegerMatrix& M) {
             exit(-1);
         }
     }
+    //Copying entries
     for (size_type i = 0; i < M.numberOfRows_; ++i) {
         for (size_type j = 0; j < M.numberOfColumns_; ++j) {
             M2[i][j] = M.Matrix_[i][j];
@@ -254,7 +252,7 @@ bool IntegerMatrix::operator==(const IntegerMatrix& A) const noexcept {
 //Addition
 IntegerMatrix& IntegerMatrix::operator+=(const IntegerMatrix & A) {
     if (A.getNumberOfColumns() != this->getNumberOfColumns() ||
-       A.getNumberOfRows() != this->getNumberOfRows()) {
+        A.getNumberOfRows()    != this->getNumberOfRows()) {
         throw IntegerMatrix_Exception("Addition of matrices of distinct sizes");
         return *this;
     }
@@ -376,7 +374,7 @@ IntegerMatrix& IntegerMatrix::multiplyColumn(size_type j, integer c,
     return *this;
 }
 
-//Multiply two columns by 2 x 2 matrix on the right
+//Multiplying two columns by 2 x 2 matrix on the right
 IntegerMatrix& IntegerMatrix::transformColumns(size_type j1,  size_type j2,
                                                integer   a11, integer   a12,
                                                integer   a21, integer   a22, 

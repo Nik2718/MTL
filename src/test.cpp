@@ -6,7 +6,7 @@
 #define BOOST_TEST_MODULE Tests
 #include  <boost/test/unit_test.hpp>
 
-//Checking Smith normal form
+//Checking the Smith normal form
 bool checkSmithForm(const IntegerMatrix& A) {
     SmithForm S(A);
     if (S.isCorrect() == false) {
@@ -14,7 +14,7 @@ bool checkSmithForm(const IntegerMatrix& A) {
         return false;
     }
 
-    //Checking that an invariant factors divides each next one
+    //Checking that an invariant factors divides the next one
     {
         IntegerMatrix::size_type k = 1;
         for (; S.getInvariantFactor(k - 1) != 0 && k < S.getMinSize(); ++k) {
@@ -30,7 +30,7 @@ bool checkSmithForm(const IntegerMatrix& A) {
     }
 
     //Check that multiplication of A by the transformation matrices is
-    //the diagonal matrix of invariant factors
+    //the diagonal matrix of the invariant factors
     IntegerMatrix D = S.getLeftMatrix() * A * S.getRightMatrix();
 
     for (IntegerMatrix::size_type i = 0; i < A.getNumberOfRows(); ++i) {
@@ -121,7 +121,13 @@ BOOST_AUTO_TEST_CASE( test_5 ) {
     IntegerMatrix C {{14, 16, -8},
                      {58, 2,   2}};
 
+    IntegerMatrix D{{1, 0},
+                    {0, 0}};
+
     BOOST_CHECK(C == A * B);
+    BOOST_CHECK(D == D * D * D);
+    A *= B;
+    BOOST_CHECK(C == A);
     try {
         C = B * A;
     }
@@ -131,7 +137,7 @@ BOOST_AUTO_TEST_CASE( test_5 ) {
     BOOST_ERROR("Product of matrices of inappropriate sizes\n"); 
 }
 
-//Function for the number of digits
+//The function for the number of digits
 BOOST_AUTO_TEST_CASE( test_6 ) {
     BOOST_CHECK(IntegerMatrix::number_length10(0) == 1);
     BOOST_CHECK(IntegerMatrix::number_length10(-1) == 2);

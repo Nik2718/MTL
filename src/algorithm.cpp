@@ -1,4 +1,4 @@
-//Algorithm for calculation of the Smith normal form
+//An algorithm for calculation of the Smith normal form
 
 #include "../include/int_matrix.hpp"
 
@@ -11,10 +11,12 @@ using integer = IntegerMatrix::integer;
 enum class State{End, Continue};
 State algorithmStep(IntegerMatrix& A, IntegerMatrix& Left, IntegerMatrix& Right,
                     size_type step);
+
 void processRows   (IntegerMatrix& A, IntegerMatrix& Left, IntegerMatrix& Right,
                     size_type step);
 void processColumns(IntegerMatrix& A, IntegerMatrix& Left, IntegerMatrix& Right,
                     size_type step);
+
 //Checking whether the current row and column of the submatrix is
 //zero except for, possibly, the corner element
 bool isZero(IntegerMatrix& A, size_type step);
@@ -57,7 +59,7 @@ SmithForm::SmithForm(IntegerMatrix A) {
         }
     }
     //This catch is relevant only when
-    // IntegerMatrix::integer is checked boost integer
+    //IntegerMatrix::integer is a checked boost integer
     //see documentation for boost/multiprecision/cpp_int.hpp
     catch(std::overflow_error &E) {
         isCorrect_ = false;
@@ -66,8 +68,7 @@ SmithForm::SmithForm(IntegerMatrix A) {
         Right_ = IntegerMatrix(1,1,1);
         return;
     }
-    //Collecting the diagonal entries of the matrix in
-    //InvariantFactors_ vector
+    //Collecting the diagonal entries of the matrix
     InvariantFactors_ = std::vector<integer> (minSize_, 0);
     for (size_type i = 0; i < minSize_; ++i) InvariantFactors_[i] = A(i,i);
     isCorrect_ = true;
@@ -94,7 +95,8 @@ State algorithmStep(IntegerMatrix& A, IntegerMatrix& Left, IntegerMatrix& Right,
         //Only zeroes remains in the matrix
         if (isSubmatrixZero == true) return State::End;
     }
-    //Processing rows and rows until the current step and row become zero
+    //Processing rows and columns until the current row and column become zero
+    //zero except for the corner element
     while (isZero(A, step) == false) {
         processRows   (A, Left, Right, step);
         processColumns(A, Left, Right, step);
